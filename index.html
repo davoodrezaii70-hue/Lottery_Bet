@@ -1,224 +1,313 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LotteryBet - Crash</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LOTTERYBET CRASH</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- background:#090f1d;
- color:white;
- font-family:Tahoma,Arial;
- padding:15px;
-}
-.container{max-width:900px;margin:auto}
-header{
- display:flex;
- justify-content:space-between;
- align-items:center;
- padding:15px;
- background:#15243a;
- border-radius:15px;
- margin-bottom:15px;
-}
-.logo{font-size:23px;font-weight:bold;color:#20d69a}
-.balance{font-size:14px}
-.card{
- background:#142238;
- padding:15px;
- border-radius:16px;
- margin-bottom:15px;
-}
-.chart{
- height:280px;
- background:#0b1729;
- border:1px solid #29415e;
- border-radius:12px;
- display:flex;
- justify-content:center;
- align-items:center;
- position:relative;
-}
-#multiplier{
- font-size:65px;
- font-weight:bold;
- color:#20d69a;
-}
-input{
- width:100%;
- padding:13px;
- margin-top:8px;
- background:#091321;
- border:1px solid #34506d;
- border-radius:9px;
- color:white;
- font-size:16px;
-}
-button{
- width:100%;
- padding:14px;
- border:0;
- border-radius:10px;
- margin-top:10px;
- background:#20d69a;
- font-size:16px;
- font-weight:bold;
- cursor:pointer;
-}
-#cashout{background:#ffc65c}
+body{margin:0;padding:16px;background:#080e19;color:#eef4ff;font-family:Tahoma,Arial}
+.wrap{max-width:1150px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+.logo{font-size:26px;font-weight:bold}
+.logo span{color:#20d69a}
+.balance,.panel{background:#111c2d;border:1px solid #26364e;border-radius:14px;padding:15px}
+.grid{display:grid;grid-template-columns:1.8fr 1fr;gap:14px}
+.chart{height:300px;background:linear-gradient(#10243a,#091321);border-radius:12px;position:relative;overflow:hidden}
+canvas{width:100%;height:100%}
+.mult{position:absolute;inset:0;display:grid;place-items:center;font-size:65px;font-weight:bold;color:#20d69a}
+.controls,.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+label{display:block;font-size:12px;color:#9aacc6;margin-bottom:8px}
+input{width:100%;padding:12px;background:#081321;border:1px solid #314762;border-radius:8px;color:white;font-size:16px}
+button{border:0;border-radius:9px;padding:13px;font-weight:bold;cursor:pointer;background:#20d69a;color:#061b14}
 button:disabled{opacity:.4}
-.info{
- display:flex;
- justify-content:space-between;
- margin-top:15px;
- color:#b6c5da;
-}
+.cash{background:#ffc45a}
+.secondary,.quick button{background:#293c56;color:white}
+.quick{display:flex;gap:5px;margin-top:7px}
+.quick button{flex:1;padding:7px;font-size:11px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.stat{background:#0b1625;padding:12px;border-radius:9px;text-align:center}
+.stat small{display:block;color:#8fa2bd;margin-bottom:6px}
+.help{font-size:12px;color:#9aacc6;line-height:2}
+.history{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.tag{padding:7px 10px;border-radius:7px;background:#392433;color:#ff8ba1;font-size:12px}
+.high{background:#12382f;color:#4ce2b0}
+.low{background:#3a2c1d;color:#ffc56b}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}
+th,td{padding:10px 5px;text-align:right;border-bottom:1px solid #26364e}
+th{color:#8fa2bd}
+.good{color:#20d69a}
+.bad{color:#ff5574}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.chart{height:260px}}
 </style>
 </head>
 <body>
-<div class="container">
-
+<div class="wrap">
 <header>
- <div class="logo">LOTTERYBET</div>
- <div class="balance">
- موجودی: <b id="balance">1000</b> سکه
+ <div>
+  <div class="logo">LOTTERY<span>BET</span></div>
+  <small style="color:#8fa2bd">CRASH GAME</small>
  </div>
+ <div class="balance">موجودی: <b id="balance">10,000</b> سکه</div>
 </header>
 
-<div class="card">
- <div class="chart">
-  <div id="multiplier">1.00x</div>
+<div class="grid">
+<section>
+ <div class="panel">
+  <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+   <b>بازی کراش</b>
+   <span id="roundStatus" style="color:#20d69a">آماده شروع</span>
+  </div>
+  <div class="chart">
+   <canvas id="chart"></canvas>
+   <div class="mult" id="multiplier">1.00x</div>
+  </div>
+  <p id="message" style="text-align:center;color:#9aacc6">مبلغ شرط را وارد کنید</p>
+  <div class="controls">
+   <div>
+    <label>مبلغ شرط</label>
+    <input id="bet" type="number" min="1" value="100">
+    <div class="quick">
+     <button onclick="adjust(50)">+50</button>
+     <button onclick="adjust(100)">+100</button>
+     <button onclick="adjust(500)">+500</button>
+    </div>
+   </div>
+   <div>
+    <label>برداشت خودکار</label>
+    <input id="autoCash" type="number" min="1.01" step=".01" placeholder="2.00">
+   </div>
+  </div>
+  <div class="actions">
+   <button id="playBtn" onclick="startGame()">ثبت شرط و شروع</button>
+   <button id="cashBtn" class="cash" onclick="cashOut()" disabled>برداشت سود</button>
+  </div>
+  <div class="stats">
+   <div class="stat"><small>بردها</small><b id="wins">0</b></div>
+   <div class="stat"><small>باخت‌ها</small><b id="losses">0</b></div>
+   <div class="stat"><small>سود خالص</small><b id="net">0</b></div>
+   <div class="stat"><small>بهترین برداشت</small><b id="best">0.00x</b></div>
+  </div>
  </div>
-
- <label>مبلغ بازی</label>
- <input id="bet" type="number" value="50" min="1">
-
- <label>ضریب برداشت خودکار</label>
- <input id="auto" type="number" placeholder="مثلاً 2">
-
- <button id="start" onclick="startGame()">شروع کراش</button>
- <button id="cashout" onclick="cashOut()" disabled>
- برداشت سود
- </button>
-
- <div class="info">
-  <span>وضعیت:</span>
-  <b id="status">آماده بازی</b>
+ <div class="panel" style="margin-top:14px">
+  <b>تاریخچه شرط‌ها</b>
+  <table>
+   <thead><tr><th>مبلغ</th><th>ضریب</th><th>نتیجه</th><th>سود</th></tr></thead>
+   <tbody id="betHistory"><tr><td colspan="4">هنوز شرطی ثبت نشده</td></tr></tbody>
+  </table>
  </div>
-</div>
+</section>
 
-<div class="card">
- <h3>نتایج بازی</h3>
- <div id="history">هنوز نتیجه‌ای ثبت نشده</div>
+<aside class="panel">
+ <b>ضرایب اخیر</b>
+ <div class="history" id="recent"></div>
+ <hr style="border-color:#26364e;margin:18px 0">
+ <b>راهنمای بازی</b>
+ <p class="help">
+  ۱. مبلغ شرط را وارد کن.<br>
+  ۲. ثبت شرط را بزن.<br>
+  ۳. ضریب شروع به افزایش می‌کند.<br>
+  ۴. قبل از کراش، سود را برداشت کن.<br>
+  ۵. اگر کراش شود و برداشت نکرده باشی، شرط را می‌بازی.
+ </p>
+ <button class="secondary" style="width:100%;margin-top:12px" onclick="resetGame()">بازنشانی بازی</button>
+</aside>
 </div>
-
+<p class="help" style="text-align:center">نسخه آزمایشی با اعتبار مجازی؛ بدون پول واقعی یا اتصال به سرور.</p>
 </div>
 
 <script>
-let balance=1000;
-let bet=0;
-let multiplier=1;
-let crashPoint=0;
-let active=false;
-let cashed=false;
-let timer=null;
-let startTime=0;
+const $=id=>document.getElementById(id);
+const canvas=$("chart");
+const ctx=canvas.getContext("2d");
+
+let balance=10000,running=false,cashed=false;
+let betAmount=0,multiplier=1,crashPoint=1;
+let startTime=0,points=[],wins=0,losses=0,net=0,best=0;
+let recent=[],history=[];
+
+function resize(){
+ const r=canvas.getBoundingClientRect();
+ const d=window.devicePixelRatio||1;
+ canvas.width=r.width*d;
+ canvas.height=r.height*d;
+ ctx.setTransform(d,0,0,d,0,0);
+ draw();
+}
+window.addEventListener("resize",resize);
+
+function adjust(n){
+ $("bet").value=Math.max(1,Number($("bet").value||0)+n);
+}
 
 function update(){
- document.getElementById("balance").textContent=balance;
- document.getElementById("multiplier").textContent=
- multiplier.toFixed(2)+"x";
+ $("balance").textContent=balance.toLocaleString("en-US");
+ $("wins").textContent=wins;
+ $("losses").textContent=losses;
+ $("net").textContent=net.toLocaleString("en-US");
+ $("best").textContent=best.toFixed(2)+"x";
+}
+
+function randomCrash(){
+ let r=Math.random();
+ if(r<.35)return 1+Math.random()*.45;
+ if(r<.75)return 1.45+Math.random()*1.5;
+ if(r<.94)return 2.95+Math.random()*4;
+ return 7+Math.random()*18;
 }
 
 function startGame(){
- if(active)return;
-
- bet=Number(document.getElementById("bet").value);
-
- if(bet<1 || bet>balance){
-  alert("مبلغ نامعتبر است");
-  return;
+ if(running)return;
+ let amount=Number($("bet").value);
+ if(!Number.isFinite(amount)||amount<1){
+  alert("مبلغ معتبر وارد کنید");return;
  }
-
- balance-=bet;
+ if(amount>balance){
+  alert("موجودی کافی نیست");return;
+ }
+ betAmount=amount;
+ balance-=amount;
  multiplier=1;
+ crashPoint=randomCrash();
+ points=[1];
+ running=true;
  cashed=false;
- active=true;
-
- crashPoint=Math.max(1.05,1-Math.log(Math.random())*2);
- startTime=Date.now();
-
- document.getElementById("start").disabled=true;
- document.getElementById("cashout").disabled=false;
- document.getElementById("status").textContent="در حال اجرا";
-
+ startTime=performance.now();
+ $("playBtn").disabled=true;
+ $("cashBtn").disabled=false;
+ $("roundStatus").textContent="در حال اجرا";
+ $("message").textContent="ضریب در حال افزایش است";
+ $("multiplier").style.color="#20d69a";
  update();
- gameLoop();
+ requestAnimationFrame(tick);
 }
 
-function gameLoop(){
- if(!active)return;
-
- multiplier=Math.exp((Date.now()-startTime)/1000*.35);
-
+function tick(now){
+ if(!running)return;
+ let elapsed=(now-startTime)/1000;
+ multiplier=Math.exp(elapsed*.34);
  if(multiplier>=crashPoint){
   multiplier=crashPoint;
-  active=false;
-
-  document.getElementById("cashout").disabled=true;
-  document.getElementById("start").disabled=false;
-
-  if(!cashed){
-   document.getElementById("status").textContent="باخت!";
-   addHistory("باخت در "+multiplier.toFixed(2)+"x");
-  }
-
-  update();
+  points.push(multiplier);
+  draw();
+  finishCrash();
   return;
  }
+ points.push(multiplier);
+ $("multiplier").textContent=multiplier.toFixed(2)+"x";
+ draw();
 
- update();
-
- let auto=Number(document.getElementById("auto").value);
-
- if(!cashed && auto>1 && multiplier>=auto){
+ let auto=Number($("autoCash").value);
+ if(!cashed&&auto>1&&multiplier>=auto){
   cashOut();
-  return;
  }
+ if(running)requestAnimationFrame(tick);
+}
 
- timer=setTimeout(gameLoop,50);
+function draw(){
+ const w=canvas.clientWidth,h=canvas.clientHeight;
+ ctx.clearRect(0,0,w,h);
+ ctx.strokeStyle="#263b55";
+ ctx.lineWidth=1;
+ for(let i=1;i<5;i++){
+  ctx.beginPath();
+  ctx.moveTo(0,h*i/5);
+  ctx.lineTo(w,h*i/5);
+  ctx.stroke();
+ }
+ if(points.length<2)return;
+ let max=Math.max(2,...points)*1.15;
+ ctx.beginPath();
+ points.forEach((v,i)=>{
+  let x=i/(Math.max(30,points.length-1))*w;
+  let y=h-((v-1)/(max-1))*(h*.85)-10;
+  if(i===0)ctx.moveTo(x,y);
+  else ctx.lineTo(x,y);
+ });
+ ctx.strokeStyle="#20d69a";
+ ctx.lineWidth=3;
+ ctx.shadowColor="#20d69a";
+ ctx.shadowBlur=12;
+ ctx.stroke();
+ ctx.shadowBlur=0;
 }
 
 function cashOut(){
- if(!active || cashed)return;
-
+ if(!running||cashed)return;
  cashed=true;
-
- let payout=Math.floor(bet*multiplier);
- let profit=payout-bet;
-
+ running=false;
+ let payout=Math.floor(betAmount*multiplier*100)/100;
+ let profit=payout-betAmount;
  balance+=payout;
- document.getElementById("cashout").disabled=true;
- document.getElementById("status").textContent=
- "برد! سود: "+profit+" سکه";
-
- addHistory("برد در "+multiplier.toFixed(2)+"x");
-
+ wins++;
+ net+=profit;
+ best=Math.max(best,multiplier);
+ $("message").textContent="برداشت موفق: "+payout.toFixed(2)+" سکه";
+ $("roundStatus").textContent="برداشت شد";
+ $("roundStatus").style.color="#20d69a";
+ $("cashBtn").disabled=true;
+ $("playBtn").disabled=false;
+ addHistory(multiplier,"برد",profit);
+ addRecent(multiplier);
  update();
 }
 
-function addHistory(text){
- let h=document.getElementById("history");
- if(h.textContent.includes("هنوز نتیجه")){
-  h.textContent="";
+function finishCrash(){
+ running=false;
+ $("multiplier").textContent=multiplier.toFixed(2)+"x";
+ $("multiplier").style.color="#ff5574";
+ $("message").textContent="کراش شد! ضریب نهایی "+multiplier.toFixed(2)+"x";
+ $("roundStatus").textContent="پایان دور";
+ $("roundStatus").style.color="#ff5574";
+ $("cashBtn").disabled=true;
+ $("playBtn").disabled=false;
+ if(!cashed){
+  losses++;
+  net-=betAmount;
+  addHistory(multiplier,"باخت",-betAmount);
  }
- let item=document.createElement("p");
- item.textContent=text;
- h.prepend(item);
+ addRecent(multiplier);
+ update();
 }
+
+function addHistory(m,result,profit){
+ history.unshift({bet:betAmount,m,result,profit});
+ history=history.slice(0,12);
+ $("betHistory").innerHTML=history.map(x=>
+ `<tr><td>${x.bet}</td><td>${x.m.toFixed(2)}x</td>
+ <td class="${x.result==="برد"?"good":"bad"}">${x.result}</td>
+ <td class="${x.profit>=0?"good":"bad"}">${x.profit.toFixed(2)}</td></tr>`
+ ).join("");
+}
+
+function addRecent(m){
+ recent.unshift(m);
+ recent=recent.slice(0,12);
+ $("recent").innerHTML=recent.map(x=>
+ `<span class="tag ${x>=2?"high":x>=1.5?"low":""}">${x.toFixed(2)}x</span>`
+ ).join("");
+}
+
+function resetGame(){
+ if(running){
+  alert("ابتدا دور جاری را تمام کنید");
+  return;
+ }
+ balance=10000;
+ wins=0;losses=0;net=0;best=0;
+ history=[];recent=[];
+ $("betHistory").innerHTML='<tr><td colspan="4">هنوز شرطی ثبت نشده</td></tr>';
+ $("recent").innerHTML="";
+ $("multiplier").textContent="1.00x";
+ $("multiplier").style.color="#20d69a";
+ $("message").textContent="بازی بازنشانی شد";
+ $("roundStatus").textContent="آماده شروع";
+ $("roundStatus").style.color="#20d69a";
+ update();
+ draw();
+}
+
+resize();
 update();
 </script>
 </body>
